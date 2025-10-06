@@ -1,18 +1,21 @@
 public class ArrayDeque<T> {
+    private static final int MIN_CAPACITY = 16;
+    private static final int DEFAULT_CAPACITY = 8;
+
     private T[] items;
     private int size;
     private int head;  // index of first element
-    private int tail;  // index of last element 
+    private int tail;  // index of last element
 
     @SuppressWarnings("unchecked")  // 添加这行注解
     public ArrayDeque() {
-        items = (T[]) new Object[8];
+        items = (T[]) new Object[DEFAULT_CAPACITY];
         size = 0;
-        head = 0; 
+        head = 0;
         tail = -1;  // empty sentinel
     }
-    
-    public void addFirst(T x) { 
+
+    public void addFirst(T x) {
         update();
 
         head = (head - 1 + items.length) % items.length;
@@ -25,7 +28,7 @@ public class ArrayDeque<T> {
 
     public void addLast(T x) {
         update();
-        
+
         tail = (tail + 1) % items.length;
         items[tail] = x;
         size++;
@@ -39,9 +42,9 @@ public class ArrayDeque<T> {
         return size;
     }
 
-    public T removeFirst() { 
+    public T removeFirst() {
         if (isEmpty()) {
-            throw new RuntimeException("Queue is empty");
+            return null;
         }
         T removeIterm = items[head];
         items[head] = null;
@@ -52,17 +55,17 @@ public class ArrayDeque<T> {
         if (size == 0) {
             head = 0;
             tail = -1;
-        } 
-        
+        }
+
         // handle resize
         update();
 
         return removeIterm;
     }
 
-    public T removeLast() { 
+    public T removeLast() {
         if (isEmpty()) {
-            throw new RuntimeException("Queue is empty");
+            return null;
         }
         T removeIterm = items[tail];
         items[tail] = null;
@@ -71,23 +74,23 @@ public class ArrayDeque<T> {
         if (size == 0) {
             head = 0;
             tail = -1;
-        } 
+        }
 
         update();
 
         return removeIterm;
     }
 
-    public T get(int index) { 
+    public T get(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
         int getIndex = (head + index) % items.length;
         return items[getIndex];
     }
-    
+
     @SuppressWarnings("unchecked")  // 添加这行注解
-    public void resize(int capacity) {
+    private void resize(int capacity) {
         if (capacity < size) {
             throw new IllegalArgumentException("新容量必须至少为大小: " + size);
         }
@@ -100,10 +103,10 @@ public class ArrayDeque<T> {
         tail = size - 1;
     }
 
-    public void update() {
+    private void update() {
         if (size == items.length) {
-            resize(Math.max(8, items.length * 2));
-        } else if (size > 0 && size <= items.length / 4 && items.length >= 16) {
+            resize(Math.max(DEFAULT_CAPACITY, items.length * 2));
+        } else if (size > 0 && size <= items.length / 4 && items.length >= MIN_CAPACITY) {
             resize(items.length / 2);
         }
     }

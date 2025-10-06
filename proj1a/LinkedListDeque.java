@@ -1,4 +1,4 @@
-public class LinkedTDeque<T> {
+public class LinkedListDeque<T> {
     public class Node {
         T item;
         Node next;
@@ -12,9 +12,9 @@ public class LinkedTDeque<T> {
     }
 
     private Node sentinel;
-    private int size;    
+    private int size;
 
-    public LinkedTDeque() {
+    public LinkedListDeque() {
         sentinel = new Node(null, null, null);
         sentinel.next = sentinel;
         sentinel.prev = sentinel;
@@ -25,14 +25,14 @@ public class LinkedTDeque<T> {
         Node newNode = new Node(sentinel, x, sentinel.next);
         sentinel.next.prev = newNode;
         sentinel.next = newNode;
-        size ++;
+        size++;
     }
 
     public void addLast(T x) {
         Node newNode = new Node(sentinel.prev, x, sentinel);
         sentinel.prev.next = newNode;
         sentinel.prev = newNode;
-        size ++;
+        size++;
     }
 
     public boolean isEmpty() {
@@ -46,28 +46,28 @@ public class LinkedTDeque<T> {
         Node first = sentinel.next;
         sentinel.next = first.next;
         first.next.prev = sentinel;
-        size --;
+        size--;
         return first.item;
     }
 
-    public T removeLast() { 
+    public T removeLast() {
         if (isEmpty()) {
             return null;
         }
         Node last = sentinel.prev;
         sentinel.prev = last.prev;
         last.prev.next = sentinel;
-        size --;
+        size--;
         return last.item;
     }
-    
+
     public T get(int index) {
         if (index < 0 || index >= size) {
             return null;
         }
         Node current = sentinel.next;
-        for (int i = 0 ; i < index; i++) {
-            current = current.next;  
+        for (int i = 0; i < index; i++) {
+            current = current.next;
         }
         return current.item;
     }
@@ -78,6 +78,7 @@ public class LinkedTDeque<T> {
         }
         return getRecursiveHelper(sentinel.next, index);
     }
+
     public T getRecursiveHelper(Node x, int index) {
         if (index == 0) {
             return x.item;
